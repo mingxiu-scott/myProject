@@ -41,13 +41,16 @@ compiler.plugin('compilation', function (compilation) {
 })
 
 // proxy api requests
-Object.keys(proxyTable).forEach(function (context) {
-  var options = proxyTable[context]
-  if (typeof options === 'string') {
-    options = { target: options }
-  }
-  app.use(proxyMiddleware(options.filter || context, options))
-})
+// Object.keys(proxyTable).forEach(function (context) {
+//   var options = proxyTable[context]
+//   if (typeof options === 'string') {
+//     options = { target: options }
+//   }
+//   app.use(proxyMiddleware(options.filter || context, options))
+// })
+
+//配置代理中间件
+app.use(proxyMiddleware(config.dev.proxyTable.context, config.dev.proxyTable.options));
 
 // handle fallback for HTML5 history API
 app.use(require('connect-history-api-fallback')())
@@ -63,7 +66,10 @@ app.use(hotMiddleware)
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
 
-var uri = 'http://localhost:' + port
+// var uri = 'http://localhost:' + port
+
+var uri = 'https://localhost:' + port
+
 
 var _resolve
 var readyPromise = new Promise(resolve => {
@@ -80,7 +86,37 @@ devMiddleware.waitUntilValid(() => {
   _resolve()
 })
 
-var server = app.listen(port)
+
+
+
+
+
+
+// var server = app.listen(port)
+
+
+
+// 设置https协议和证书
+//使用nodejs自带的http、https模块
+var https = require('https');
+var fs = require('fs');
+
+// 根据项目的路径导入生成的证书文件
+var privateKey = fs.readFileSync(path.join(__dirname, '../config/private.pem'), 'utf8');
+var certificate = fs.readFileSync(path.join(__dirname, '../config/file.crt'), 'utf8');
+var credentials = {key: privateKey, cert: certificate};
+
+//创建https服务器
+var httpsServer = https.createServer(credentials, app);
+
+// 监听端口号
+var server = httpsServer.listen(port, function () {
+  console.log('HTTPS');
+});
+
+
+
+
 
 module.exports = {
   ready: readyPromise,

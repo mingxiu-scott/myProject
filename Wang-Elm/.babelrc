@@ -1,3 +1,5 @@
+{
+  "presets": [
     [
       "env",
       {
@@ -14,7 +16,7 @@
     "stage-2"
   ],
   "plugins": [
-    "transform-runtime"
+    "transform-runtime", "syntax-dynamic-import"
   ],
   "env": {
     "test": {

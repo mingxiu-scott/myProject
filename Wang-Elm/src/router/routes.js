@@ -3,10 +3,10 @@
  */
 
 const WangElm = () =>import('@/wangElm');
-const Msite = () =>import('@/pages/msite/msite');
-const Discover = ()=>import('@/pages/discover/discover');
-const Order = ()=>import('@/pages/order/order');
-const Profile = ()=>import('@/pages/profile/profile');
+const Msite = () =>import('pages/msite/msite');
+const Discover = ()=>import('pages/discover/discover');
+const Order = ()=>import('pages/order/order');
+const Profile = ()=>import('pages/profile/profile');
 
 export default [
     {
