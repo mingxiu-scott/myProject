@@ -115,9 +115,6 @@ var server = httpsServer.listen(port, function () {
 });
 
 
-
-
-
 module.exports = {
   ready: readyPromise,
   close: () => {

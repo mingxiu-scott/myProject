@@ -17,9 +17,7 @@ export default async(url = '', data = {}, type = 'GET') => {
         getURL = url + '?' + dataStr;
     }
 
-
     if (window.fetch) {
-
         // 配置请求头 Request 对象
         let requestConfig = {
 
@@ -33,8 +31,6 @@ export default async(url = '', data = {}, type = 'GET') => {
             cache: 'force-cache' // 强制缓存.
 
         };
-
-
         switch (type) {
             case 'GET':
                 // 如果是GET方式请求数据, 需要在
@@ -48,10 +44,9 @@ export default async(url = '', data = {}, type = 'GET') => {
                 );
                 break;
         }
-
-
         try {
 
+            //等待这句话的数据回来
             const response = await fetch(url, requestConfig);
 
             // TODO
