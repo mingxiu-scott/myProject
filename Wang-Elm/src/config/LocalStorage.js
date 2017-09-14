@@ -1,8 +1,6 @@
 /**
  * Created by intern on 2017/9/12.
  */
-
-
 export const setStorage = (key, value)=> {
     if (!key)return;
     if (typeof value !== 'string') {
