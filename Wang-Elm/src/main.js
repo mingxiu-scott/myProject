@@ -4,6 +4,7 @@ import Vue from 'vue';
 import router from './router';
 import './config/rem.js';
 import './scss/index.scss';
+import store from './vuex-store';
 
 Vue.config.productionTip = false;
 
@@ -11,4 +12,5 @@ Vue.config.productionTip = false;
 new Vue({
   el: '#wang-elm',
   router,
+  store
 });

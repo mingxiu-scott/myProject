@@ -7,6 +7,7 @@ const Msite = () =>import('pages/msite/msite');
 const Discover = ()=>import('pages/discover/discover');
 const Order = ()=>import('pages/order/order');
 const Profile = ()=>import('pages/profile/profile');
+const shop = ()=> import('pages/shop/shop');
 //路由对象
 export default [
     {
@@ -29,6 +30,10 @@ export default [
             {
                 path: '/profile',
                 component: Profile
+            },
+            {
+                path:'/shop',
+                component: shop
             }
         ]
     }

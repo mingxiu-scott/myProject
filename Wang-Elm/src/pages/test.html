@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #box{
+            width: 300px;
+            height: 400px;
+            background-color: #42b983;
+            border: 2px solid red;
+            background-clip: content-box;
+            padding: 20px;
+            margin: 100px;
+            overflow: auto;
+        }
+    </style>
+
+    <script>
+        window.onload = function () {
+            var box = document.getElementById('box');
+            box.onscroll = function () {
+                console.log('box.scrollTop' , box.scrollTop);
+                console.log('box.clientHeight',box.clientHeight);
+                console.log('box.offsetHeight',box.offsetHeight);
+                console.log('box.scrollHeight',box.scrollHeight);
+            }
+        }
+    </script>
+</head>
+<body>
+
+<div id="box">
+    Apple Watch Series 3的起售价为399美元，与之前的版本不同，它内置了蜂窝网络连接功能。苹果表示，在连接到需要登录屏幕的开放Wi-Fi网络时，这款手表可能会遇到LTE连接问题，比如在酒店或咖啡店。该公司发言人表示，苹果正在“对软件进行调查和修复”。
+    许多评论家对苹果手表的新功能大加赞扬，并普遍给出正面评价。可是包括《华尔街日报》和the Verge在内的其他知名媒体，都建议消费者不要购买这种手表，因为LTE蜂窝数据连接没有达到预期效果。除了连接问题，许多评测人士对手表电池在通话时漏电也感到失望。苹果此前曾表示，电池续航时间为18小时，但手机通话时间仅能维持1个小时。
+    许多人担心这款手表的问题可能会对苹果形象造成影响，此前苹果发布的操作系统iOS 11中也出现了问题。
+</div>
+
+</body>
+</html>
