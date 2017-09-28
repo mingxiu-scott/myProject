@@ -36,6 +36,9 @@ export const getShopList = (latitude, longitude, offset) => fetch('/shopping/res
     terminal: 'h5'
 });
 
+//获取商家头部详情的
+export const getShopHeader =(latitude,longitude,id)=>fetch('/shopping/restaurant/'+id+"?extras[]=activities&extras[]=albums&extras[]=license&extra[]=identification&extras[]=qualification&latitude="+latitude+"&longitude="+longitude);
 
+//获取商家的商品列表
 
-
+export const getShopGoodList = (restaurant_id) => fetch('shopping/v2/menu/',{restaurant_id});

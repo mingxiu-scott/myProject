@@ -4,9 +4,11 @@
 
 
 export default async(url = '', data = {}, type = 'GET') => {
+
+    console.log("top"+ url)
     type = type.toUpperCase();
     var dataStr = '';
-    var getURL = '';
+    var getURL = url;
     Object.keys(data).forEach(key=> {
         dataStr += key + '=' + data[key] + '&';
     });
@@ -15,6 +17,7 @@ export default async(url = '', data = {}, type = 'GET') => {
     if (dataStr !== '') {
         dataStr = dataStr.substr(0, dataStr.lastIndexOf('&'));
         getURL = url + '?' + dataStr;
+        console.log("if+url");
     }
 
     if (window.fetch) {
@@ -47,6 +50,9 @@ export default async(url = '', data = {}, type = 'GET') => {
         try {
 
             //等待这句话的数据回来
+
+            console.log("输出url"+url);
+
             const response = await fetch(url, requestConfig);
 
             // TODO

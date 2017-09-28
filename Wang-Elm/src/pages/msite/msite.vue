@@ -190,34 +190,33 @@
                 console.log(error);
             }
         },
-
-        beforeCreate(){
-            console.log('msite before create');
-        },
-        created(){
-            console.log('msite created');
-        },
-        beforeMount(){
-            console.log('msite beforeMount');
-        },
-        beforeUpdate(){
-            console.log('msite beforeUpdate');
-        },
-        updated(){
-            console.log('msite updated');
-        },
-        activated(){
-            console.log('msite activated');
-        },
-        activated(){
-            console.log('msite activated');
-        },
-        beforeDestroy(){
-            console.log('msite beforeDestory');
-        },
-        destroyed(){
-            console.log('msite destroyed');
-        }
+//        beforeCreate(){
+//            console.log('msite before create');
+//        },
+//        created(){
+//            console.log('msite created');
+//        },
+//        beforeMount(){
+//            console.log('msite beforeMount');
+//        },
+//        beforeUpdate(){
+//            console.log('msite beforeUpdate');
+//        },
+//        updated(){
+//            console.log('msite updated');
+//        },
+//        activated(){
+//            console.log('msite activated');
+//        },
+//        activated(){
+//            console.log('msite activated');
+//        },
+//        beforeDestroy(){
+//            console.log('msite beforeDestory');
+//        },
+//        destroyed(){
+//            console.log('msite destroyed');
+//        }
     }
 </script>
 

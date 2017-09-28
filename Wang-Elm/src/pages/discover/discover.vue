@@ -48,45 +48,6 @@
 
         },
 
-        beforeCreate(){
-            console.log("profile beforeCreate");
-        },
-        created(){
-            console.log('profile created');
-        },
-        beforeMount(){
-            console.log('profile beforeMount');
-        },
-        beforeUpdate(){
-            console.log('profile beforeUpdate');
-        },
-        updated(){
-            console.log('profile updated');
-        },
-        activated(){
-            console.log('profile activated');
-        },
-        activated(){
-            console.log('profile activated');
-        },
-        beforeDestroy(){
-            console.log('profile beforeDestory');
-        },
-        destroyed(){
-            console.log('profile destroyed');
-        },
-
-
-//        beforeRouteEnter(to, from, next){
-//            console.log("profile beforeRouteEnter");
-//            next();
-//        },
-//        beforeRouteUpdate(){
-//            console.log('profile beforeRouteUpdate');
-//        },
-//        beforeRouteLeave(){
-//            console.log('profile beforeRouteLeave')
-//        }
     }
 </script>
 <style>

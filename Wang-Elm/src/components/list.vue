@@ -2,7 +2,7 @@
     <div id="list">
 
         <div class="shop-list" v-for="(a,index) in shopList" :key="index">
-            <span to="/shop" class="jump" @click="jump">
+            <span to="/shop" class="jump" @click="jump(a.id)">
 
                 <div class="list-left">
                     <img :src="getPath(a.image_path,'130x130')" alt="">
@@ -89,8 +89,8 @@
                 }
                 return distance;
             },
-            level:function (level) {
-                return level * 20 +'%';
+            level: function (level) {
+                return level * 20 + '%';
             },
 
             //判断是有加载下一页的商家列表
@@ -98,6 +98,7 @@
                 console.log('loadShopList');
 
                 console.log(number);
+
                 getShopList(this.latitude, this.longitude, number).then(response=> {
                     this.shopList = response;
                     console.log(response);
@@ -105,8 +106,8 @@
                     console.log(error);
                 });
 
+                var body = document.documentElement;
 
-                var body = document.body;
 
                 //正常的方法是谁调用,就是this就是谁
                 //箭头函数是定义在哪里,this就是定义时的上下文
@@ -116,6 +117,8 @@
                     console.log("clientHeight  " + body.clientHeight);
                     console.log("offsetHeight  " + body.offsetHeight);
                     console.log("scrollHeight  " + body.scrollHeight);
+
+                    console.log( "bodyScrollTol" +body.scrollTop);
 
                     if (body.scrollTop + body.offsetHeight == body.scrollHeight) {
                         number += 20;
@@ -146,8 +149,16 @@
                     active[i].style.display = (active[i].style.display === "none") ? "block" : "none";
                 }
             },
-            jump(){
-                location.href = "/#/shop";
+            jump(id){
+
+                this.$router.push({
+                    path: '/shop',
+                    query: {
+                        id: id,
+                        latitude: this.latitude,
+                        longitude: this.longitude
+                    }
+                });
             }
         }
     }
@@ -167,14 +178,14 @@
         background-color: white;
         /*margin-top: pxToRem(20px);*/
         padding-top: pxToRem(20px);
-        padding-bottom:pxToRem(20px);
+        padding-bottom: pxToRem(20px);
         border-bottom: 1px solid silver;
 
     /*height: pxToRem(282px);*/
 
     span {
 
-    @include flex-content(center, flex-start);
+    @include flex-content(flex-start, flex-start);
 
     .list-left {
         /*height: 100%;*/
