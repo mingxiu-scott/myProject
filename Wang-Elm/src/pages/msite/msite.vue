@@ -232,23 +232,23 @@
         color: white;
         padding-top: pxToRem(34px);
         font-size: pxToRem(34px);
-    @include flex-content(center, space-between);
+        @include flex-content(center, space-between);
 
-    div:first-child {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        div:first-child {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
 
-        width: pxToRem(350px);
-    }
+            width: pxToRem(350px);
+        }
 
-    div:nth-child(2) {
-        /*border: 1px solid red;*/
-        text-align: right;
-        font-size: pxToRem(24px);
-        /*font-size: pxToRem(24px);*/
-    @include flex-content(center, flex-end)
-    }
+        div:nth-child(2) {
+            /*border: 1px solid red;*/
+            text-align: right;
+            font-size: pxToRem(24px);
+            /*font-size: pxToRem(24px);*/
+        @include flex-content(center, flex-end)
+        }
 
     }
     #search {
@@ -278,11 +278,11 @@
         font-size: pxToRem(25px);
         color: white;
 
-    a {
-        color: #fff;
+        a {
+            color: #fff;
 
-    @include property-of-rem(margin-right, 30px);
-    }
+            @include property-of-rem(margin-right, 30px);
+        }
 
     }
 
@@ -315,53 +315,53 @@
         /*padding: pxToRem(10px);*/
     @include flex-content(center, space-around);
 
-    a {
-        text-align: center;
-        display: block;
-        width : pxToRem(187px);
-        height : pxToRem(127px);
+        a {
+            text-align: center;
+            display: block;
+            width : pxToRem(187px);
+            height : pxToRem(127px);
 
-    div {
-        width: pxToRem(90px);
-        height: pxToRem(90px);
+            div {
+                width: pxToRem(90px);
+                height: pxToRem(90px);
 
-        margin-left: pxToRem(45px);
-        margin-bottom: pxToRem(10px);
+                margin-left: pxToRem(45px);
+                margin-bottom: pxToRem(10px);
 
+            }
+
+        }
     }
 
-    }
-    }
+         .entries-second{
+            background-color: white;
+            height: pxToRem(330px);
+            width: 100%;
 
-    .entries-second{
-        background-color: white;
-        height: pxToRem(330px);
-        width: 100%;
+            flex-wrap: wrap;
 
-        flex-wrap: wrap;
+            /*padding: pxToRem(10px);*/
+            @include flex-content(center, flex-start);
 
-        /*padding: pxToRem(10px);*/
-    @include flex-content(center, flex-start);
+            display: none;
 
-    display: none;
-
-    a {
-        text-align: center;
-        display: block;
-        /*如果要显示,更改上面为block就行了*/
-        width : pxToRem(187px);
-        height : pxToRem(127px);
+                a {
+                    text-align: center;
+                    display: block;
+                    /*如果要显示,更改上面为block就行了*/
+                    width : pxToRem(187px);
+                    height : pxToRem(127px);
 
 
-    div {
-        width: pxToRem(90px);
-        height: pxToRem(90px);
-        margin-left: pxToRem(45px);
-        margin-bottom: pxToRem(10px);
+                    div {
+                        width: pxToRem(90px);
+                        height: pxToRem(90px);
+                        margin-left: pxToRem(45px);
+                        margin-bottom: pxToRem(10px);
 
-    }
-    }
-    }
+                    }
+                }
+        }
 
     }
 
@@ -384,6 +384,7 @@
     }
 
     .index-shop-title{
+
         background-color: white;
         width: 100%;
         height: pxToRem(80px);

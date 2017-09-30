@@ -1,11 +1,13 @@
 <template>
     <div id="shop">
 
+        <!--TODO 1.头部-->
         <div class="header" :style="{backgroundImage:bi,backgroundSize:'100% 200%'}">
             <!--返回的按钮-->
             <div class="return-button">
                 <i class="fa fa-angle-left" @click="$router.go(-1)"></i>
             </div>
+
             <!--中间部分-->
             <div class="content">
                 <img :src="getPath(shopHeader.image_path,'130x130')" alt="">
@@ -17,7 +19,6 @@
                 </div>
             </div>
 
-
             <!--活动-->
             <div class="activities">
                 <span>
@@ -27,8 +28,10 @@
                 <span @click="showActivity">{{shopHeader.activities.length}}个活动</span>
             </div>
         </div>
+        <!--TODO 1.头部结束-->
 
 
+        <!--TODO 点击头部活动跳出来的整个屏幕的弹框-->
         <!--点击活动,出现的整个屏幕的div-->
         <div class="showActive" v-if="changeState">
             <!--名称,招牌-->
@@ -41,7 +44,6 @@
                         <i class="fa fa-star" v-for="n in 5" style="color: yellow;"></i>
                     </span>
             </div>
-
 
             <!--优惠信息-->
             <span class="rating-message">
@@ -65,7 +67,6 @@
             </span>
 
 
-
             <!--商家公告的内容-->
             <div class="notice">
                 <span>
@@ -73,27 +74,28 @@
                 </span>
             </div>
 
-
-
             <!--返回的大X-->
             <div class="return-X" @click="showActivity">
                 <span>X</span>
             </div>
 
-
         </div>
+        <!--TODO 点击头部活动跳出来的整个屏幕的弹框结束-->
 
+
+        <!--TODO 2.商品 评价 店铺的三个界面的切换div-->
         <!--商品 评价 店铺-->
         <div class="re-good-shop">
-            <!-- goodState: true,//改变商品界面的开关
-                evaluationState: false,//改变评价的开关
-                shopState: false,-->
             <span @click="changThreeState" data-number="1" :class="{goodShopActice: goodState}">商品</span>
             <span @click="changThreeState" data-number="2" :class="{goodShopActice: evaluationState}">评价</span>
             <span @click="changThreeState" data-number="3" :class="{goodShopActice: shopState}">店铺</span>
         </div>
 
+        <!--TODO 2.商品 评价 店铺的三个界面的切换div结束-->
 
+
+
+        <!--TODO 3.商品详情界面-->
         <!--商品界面-->
         <div class="good" v-if="goodState">
 
@@ -107,33 +109,68 @@
 
                         <img :src="getPath(list.icon_url,'18x24')" alt="" v-if="list.icon_url !== ''">
                         <span>{{list.name}}</span>
-
+                        <span v-if="leftArr[index] > 0" style="color: red;">{{leftArr[index]}}</span>
                     </li>
                 </ul>
 
                 <!--商品右边的列表-->
                 <!--写一个关于右边商品div滑动,整个body的元素也想上滑动的监听-->
                 <ul class="good-list-right" @scroll="listenScoll">
+
                     <li v-for="(list, index) in goodList" :key="index" :data-number="index" class="good-list-right-li">
+
                         <ul>
+
                             <div class="list-part">
                                 <span>{{list.name}}:&nbsp;&nbsp;{{list.description}}</span><span>...</span>
                             </div>
-                            <li v-for="(list_item, index) in list.foods" :key="index" class="list-li">
+
+                            <li v-for="(list_item, index2) in list.foods" :key="index2" class="list-li">
 
                                 <img :src="getPath(list_item.image_path,'130x130')" alt="">
                                 <div>
                                     <h3>{{list_item.name}}</h3>
+
                                     <p v-if="list_item.description">{{list_item.description}}</p>
+
                                     <p>月售{{list_item.month_sales}} &nbsp;&nbsp; 好评率{{list_item.satisfy_rate
                                         }}%</p>
 
-                                    <div>
+                                    <div style="position: relative">
                                         <span>￥{{list_item.specfoods[0].price}}起</span>
-                                        <div v-if="list_item.specifications.length" class="specifications">选规格</div>
-                                        <div  class="plus" v-else>+</div>
-                                    </div>
 
+                                        <div @click="chooseSpecifications(index,index2)" v-if="list_item.specifications.length" class="specifications">选规格</div>
+
+                                        <div v-else>
+                                            <div class="minus" v-if="rightArr[index][index2] > 0" @click="minus(index, index2)">-</div>
+                                            <div v-if="rightArr[index][index2] > 0" class="number">{{rightArr[index][index2]}}</div>
+
+                                            <div @click="plus(index,index2, $event)" class="plus">+</div>
+
+                                        </div>
+                                    </div>
+                                    <!--选规格的界面, 这个界面是隐藏的-->
+
+                                    <transition name="zoom">
+                                        <div class="chooseSpecifications" v-if="specification == index2 && specificationTwo == index">
+                                            <div class="center">
+                                                <div>
+                                                    <span>熏肉大饼一套半</span>
+                                                    <span @click="chooseSpecifications(1,1)">X</span>
+                                                </div>
+
+                                                <div>
+                                                    <span>甜面酱</span>
+                                                    <span>甜面酱</span>
+                                                </div>
+
+                                                <div>
+                                                    <span>￥21</span>
+                                                    <span>选好了</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </transition>
                                 </div>
                             </li>
                         </ul>
@@ -143,23 +180,71 @@
 
             <div class="good-content">
 
+
             </div>
+
+
+
         </div>
+
+        <!--TODO 3.商品详情界面结束-->
+
 
         <!--评价界面-->
         <div class="evaluation" v-if="evaluationState">
             <h1>评价页面</h1>
         </div>
 
+
         <!--店铺界面-->
         <div class="shop" v-if="shopState">
             <h1>店铺页面</h1>
         </div>
+
+        <!--TODO 4.底部购物车-->
+        <!--底部购物车的-->
+        <div class="shopCart" v-if="goodState">
+
+            <div class="cart-left">
+                <div class="shopCart-icon" :class="{'car-icon-animation':isAnimation}" @animationend="removeAnimation">
+                    <i class="fa fa-shopping-cart"></i>
+                </div>
+                <div class="shopCart-count">
+                    <p>￥0</p>
+                    <p>配送费￥5</p>
+                </div>
+            </div>
+            <button class="cart-right">去结算</button>
+
+            <!-- 动画 小球 -->
+            <div class="ball-container">
+
+                <transition-group name="drop" tag="div"
+                            v-on:before-enter="beforeEnter"
+                            v-on:enter="enter"
+                            v-on:after-enter="afterEnter">
+
+                    <div class="ball"  v-for="(ball,index) in balls"    v-show="ball.show" :key="index">
+                        <div class="inner inner-hook" ref="innerHook"></div>
+                    </div>
+                </transition-group>
+
+            </div>
+
+        </div>
+        <!--TODO 4.底部购物车结束-->
+
+
     </div>
 
 </template>
 
+
+<!--TODO JS  *******************************************-->
+
 <script type="text/ecmascript-6">
+
+    //TODO VUE IMPORT
     import {
             getShopHeader,
             getShopGoodList
@@ -172,6 +257,7 @@
 
     export default{
         name: 'shop',
+        //TODO VUE DATA
         data(){
             return {
                 shopHeader: null,
@@ -186,23 +272,67 @@
 
                 isShopListActive: 0,
 
-                plusAdd: true
+                specification : -1, //判断规格的开关
+                specificationTwo: -1,
+
+                minus1 : -1,
+                minus2: -1,
+
+                orderNumber : 0,
+
+                rightArr: [],//存储右边的数组的数字
+
+                leftArr: [],//存储左边的数字
+                ballPlus: null,
+                isAnimation: false,
+
+                balls: [
+                    {
+                        show: false,
+                    },
+                    {
+                        show: false,
+                    },
+                    {
+                        show: false,
+                    },
+                    {
+                        show: false,
+                    },
+                    {
+                        show: false,
+                    },
+                    {
+                        show: false,
+                    },
+                ],
+                dropBalls: [],
+
             }
         },
 
+        //TODO VUE COMPUTED
         //拼接的backgroundImage的字符串
         computed: {
-            bi(){
+
+            bi(){   //TODO 拼接background-Image 后面的url
                 return 'url(' + this.backgroudImage + ')';
             },
-            location(){
+            location(){   //TODO 获得路由过来的定位的值
                 return this.$store.state.location;
             }
         },
+
+        //TODO VUE METHOD
         methods: {
+
+            //TODO METHOD getPAth 获取图片的路径
             getPath: getImgPath,
+
+            //TODO METHOD getShopImg 获取商家头部图片的路径
             getShopImg: getShopViewImg,
 
+            //TODO METHOD showActivity
             //切换活动的方法
             showActivity(){
                 this.changeState = this.changeState ? false : true;
@@ -232,6 +362,7 @@
                     this.shopState = true;
                 }
             },
+
             listenScoll(e){
                 //其实联动的也很好写,就是判断让body.scollTop等于你拖动的元素的scrollTop
 
@@ -239,15 +370,12 @@
 
                 document.documentElement.scrollTop = ul.scrollTop;
 
-
-
                 console.log("body ScrollTop" + document.body.scrollTop);
 
                 var rightIndex = ul.childNodes;
 
                 var height = 0;
 
-                var leftIndex = document.getElementsByClassName("list-style");
 
                 for (var i = 0; i < rightIndex.length; i++) {
 
@@ -283,7 +411,6 @@
                         var rightIndex = rightLis[i];
                         break;
                     }
-
                     //元素的高度
                     height += rightLis[i].offsetHeight;
                 }
@@ -294,9 +421,181 @@
                 //滚轴滚动框的高度
                 ulGoodList.scrollTop = height;
 
+            },
+
+            minus(index, index2){
+//                alert(index + index2);
+
+                let arr = this.rightArr[index];
+
+                arr[index2] -= 1;
+
+
+                this.leftArr[index] -= 1;
+
+                this.$set(this.leftArr, index, this.leftArr[index]);
+
+
+                //$set属性,是为了更新vue的属性的方法
+
+                this.$set(this.rightArr, index, arr);
+            },
+
+            removeAnimation () {
+                this.isAnimation = false;
+            },
+
+            plus(index, index2, event){
+
+                this.ballPlus = event.currentTarget;
+
+
+                this.drop(event.currentTarget);
+
+
+                let arr = this.rightArr[index];
+
+                arr[index2] += 1;
+
+                this.leftArr[index] += 1;
+
+                this.$set(this.leftArr, index, this.leftArr[index]);
+
+                console.log("ddddlist"+ this.leftArr[index]);
+
+                this.$set(this.rightArr, index, arr);
+
+            },
+
+            //选规格的切换函数
+            chooseSpecifications(index1,index2){
+
+                this.specificationTwo = this.specificationTwo == -1 ? index1 : -1;
+                this.specification = this.specification == -1 ? index2 : -1;
+
+            },
+
+            initArr(response){
+
+                console.log( "aaaaaa" +response);
+
+                var leftArr = new Array();
+
+                var  rightArr = new Array();
+
+                for (var j = 0; j < response.length; j++){
+                    leftArr[j] = 0;
+                 }
+
+                for (var i = 0; i < response.length; i++){
+                    rightArr[i] = new Array();
+                    for (var j =0; j < response[i].foods.length; j++){
+                        rightArr[i][j] = 0;
+                    }
+                }
+
+                this.leftArr = leftArr;
+
+                this.rightArr = rightArr;
+                console.log( "bbbbbbbbbbb" +this.rightArr);
+            },
+
+            drop(el){
+
+                console.log("drop");
+              for (let i = 0; i < this.balls.length; i++){
+
+                  let ball = this.balls[i];
+                  if (!ball.show){
+                      ball.show = true;
+                      ball.el = el;
+                      this.dropBalls.push(ball);
+                      return;
+                  }
+              }
+            },
+
+            beforeEnter(el){
+
+                console.log("beforeEnter");
+
+//                let rect = this.ballPlus.getBoundingClientRect();
+//
+//                let x = rect.left - 32;
+//                let y = -(window.innerHeight - rect.top - 22);
+//
+//                el.style.webkitTransform = "translate3d(0,)"+ y + 'px,0)';
+//
+//                el.style.transform = 'translate3d(0, ' +y+'px, 0)';
+//
+//                // 获取里层元素
+//                let inner = el.getElementsByClassName('inner-hook')[0];
+//                // 里层元素控制x轴方向的过渡
+//                inner.style.webkitTransform = 'translate3d('+x+'px, 0, 0)';
+//                inner.style.transform = 'translate3d('+x+'px, 0, 0)';
+
+                let count = this.balls.length;
+
+                while (count--){
+                    let ball = this.balls[count];
+
+                    if (ball.show){
+                        let rect = ball.el.getBoundingClientRect();
+                        console.log(rect);
+
+                        let x = rect.left - 74;
+                        let y = -(window.innerHeight -rect.top - 141);
+
+
+                        // 外层元素控制y轴方向的过渡
+                        el.style.webkitTransform = 'translate3d(0, ' +y+'px, 0)';
+                        el.style.transform = 'translate3d(0, ' +y+'px, 0)';
+
+                        // 获取里层元素
+                        let inner = el.getElementsByClassName('inner-hook')[0];
+
+                        // 里层元素控制x轴方向的过渡
+                        inner.style.webkitTransform = 'translate3d('+x+'px, 0, 0)';
+                        inner.style.transform = 'translate3d('+x+'px, 0, 0)';
+                    }
+                }
+
+
+            },
+            enter(el){
+
+                console.log('enter');
+
+                let rel = el.offsetHeight;
+
+                this.$nextTick(function () {
+
+                    el.style.webkitTransform = 'translate3d(0, 0, 0)';
+                    el.style.transform = 'translate3d(0, 0, 0)';
+
+                    let inner = el.getElementsByClassName('inner-hook')[0];
+                    inner.style.webkitTransform = 'translate3d(0, 0, 0)';
+                    inner.style.transform = 'translate3d(0, 0, 0)';
+
+                });
+
+            },
+            afterEnter(){
+
+                console.log('afterEnter');
+
+                let ball = this.dropBalls.shift();
+
+                if (ball) {
+                    ball.show = false;
+                }
+
+                this.isAnimation = true;
             }
+
         },
 
+        //TODO VUE MOUNTED
         mounted(){
             //获取商品头部的信息
             getShopHeader(this.$route.query.latitude, this.$route.query.longitude, this.$route.query.id).then(response=> {
@@ -309,14 +608,17 @@
             //获取商品列表的信息
             getShopGoodList(this.$route.query.id).then(response=> {
                 this.goodList = response;
-                console.log(this.goodList);
+                this.initArr(response);
             }).catch(error=> {
                 console.log(error);
             });
+
         }
     }
 </script>
 
+
+<!--TODO CSS     -->
 <style lang="scss" type="text/scss">
 
     @import "../../scss/mixin.scss";
@@ -350,7 +652,6 @@
                 }
 
                 div {
-
                      /*店名*/
                     p:first-child {
                         font-size: pxToRem(32px);
@@ -435,11 +736,11 @@
             .wrap-active {
                 margin-top: pxToRem(20px);
 
-            .active {
-                text-align: start;
-                font-size: pxToRem(20px);
-                margin-top: pxToRem(20px);
-            }
+                .active {
+                    text-align: start;
+                    font-size: pxToRem(20px);
+                    margin-top: pxToRem(20px);
+                }
 
             }
             /*商家公告的样式*/
@@ -513,7 +814,7 @@
 
 
                     .list-part {
-                    @include flex-content(center, space-between);
+                        @include flex-content(center, space-between);
                         height: pxToRem(55px);
                         background-color: silver;
                         line-height: 48px;
@@ -546,57 +847,210 @@
                                 color: #666666;
                             }
                             div{
-                                @include flex-content(center,space-between);
-                                span{
-                                    color: red;
-                                }
-                                .specifications{
-                                    padding-left: pxToRem(15px);
-                                    color: white;
-                                    background-color: #0089dc;
-                                    width: pxToRem(100px);
-                                    height: pxToRem(50px);
+                                    @include flex-content(center,space-between);
+                                    span{
+                                        color: red;
+                                    }
+                                    .specifications{
+                                        padding-left: pxToRem(15px);
+                                        color: white;
+                                        background-color: #0089dc;
+                                        width: pxToRem(100px);
+                                        height: pxToRem(50px);
 
-                                    border-radius: 100px;
+                                        border-radius: 100px;
 
-                                    margin-right: pxToRem(20px);
-                                }
-                                .plus{
-                                    text-align: center;
-                                    vertical-align: middle;
+                                        margin-right: pxToRem(20px);
+                                    }
+                                    div{
+
+                                    @include flex-content(center,flex-end);
+
+                                        color: white;
+
+                                        width: 258px;
+                                        .plus{
+                                            text-align: center;
+                                            vertical-align: middle;
+                                            background-color: #0089dc;
+                                            font-size: pxToRem(40px);
+                                            height: pxToRem(40px);
+                                            width: pxToRem(40px);
+                                            margin-right: pxToRem(20px);
+                                            border-radius: 40px;
+
+                                        }
+                                        .minus{
+                                            background-color: #0089dc;
+                                            font-size: pxToRem(40px);
+                                            height: pxToRem(40px);
+                                            width: pxToRem(40px);
+                                            border-radius: 40px;
+                                            margin-right: pxToRem(40px);
+                                        }
+                                        .number{
+                                            height: pxToRem(40px);
+                                            width: pxToRem(40px);
+                                            color:red;
+                                            margin-right: pxToRem(40px);
+                                        }
+
+                                    }
+
+                            }
+                            .chooseSpecifications{
+                                width: pxToRem(750px);
+                                height: pxToRem(2200px);
+                                /*opacity: 0.6;*/
+
+                                background-color: rgba(0, 0, 0, 0.5);
+
+                                position: absolute;
+                                left: 50%;
+                                top: 50%;
+
+                                transform: translate(-50%,-50%);
+
+                                .center{
+                                    background-color: rgb(255,255,255);
+                                    /*opacity: 1;*/
+
+                                    width: pxToRem(600px);
+                                    height: pxToRem(412px);
                                     color: white;
-                                    background-color: #0089dc;
-                                    font-size: pxToRem(40px);
-                                    height: pxToRem(40px);
-                                    width: pxToRem(40px);
-                                    margin-right: pxToRem(20px);
-                                    border-radius: 40px;
+                                    display: block;
+
+                                    position: fixed;
+                                    left: 50%;
+                                    top: 50%;
+                                    transform: translate(-50%,-50%);
                                 }
                             }
-                        }
 
+                            /*选规格的淡入淡出的效果类*/
+                            .zoom-enter-active, .zoom-leave-active {
+                                transition: all .3s ease-in-out;
+                            }
+                            .zoom-enter, .zoom-leave-to {
+                                transform: translate(-50%, -50%) scale(0);
+                            }
+
+                            .zoom-enter-to, .zoom-leave {
+                                transform: translate(-50%, -50%) scale(1);
+                            }
+                        }
                     }
 
                 }
             }
         }
-
         /*给商品 评价 店铺 绑定的样式类*/
-            .goodShopActice {
+        .goodShopActice {
+            color: #3e90e8;
+            border-bottom: 3px #3e90e8 solid;
+            padding-bottom: 5px;
+        }
 
-                color: #3e90e8;
-                border-bottom: 3px #3e90e8 solid;
-                padding-bottom: 5px;
+        /*商品左边的列表切换的样式类*/
+        .shopListActive {
+            background-color: white;
+            border-left: 3px #3e90e8 solid;
+        }
+
+
+        /*底部购物车的样式*/
+
+        .shopCart{
+
+            /*background-color: #0089dc;*/
+            position: fixed;
+
+            bottom: 0;
+            left: 0;
+
+
+            height: pxToRem(90px);
+            width: 100%;
+
+            @include flex-content(center, space-between);
+
+            .cart-left{
+
+                background-color: silver;
+                height: pxToRem(91px);
+                width: pxToRem(540px);
+                @include flex-content(center, flex-end);
+
+                .shopCart-icon{
+                    padding-top: pxToRem(6px);
+                    line-height: pxToRem(60px);
+                    text-align: center;
+                    width: pxToRem(80px);
+                    height: pxToRem(80px);
+
+                    font-size: pxToRem(55px);
+                    border-radius: 80px;
+                    background-color: #0089dc;
+
+                    position: absolute;
+
+                    left: 50px;
+                    bottom: 20px;
+                }
+                .shopCart-count{
+                    width: pxToRem(382px);
+                }
+            }
+            .cart-right{
+                color: #fff;
+                font-size: pxToRem(29px);
+                background-color: #4cd964;
+                width: pxToRem(210px);
+                height: pxToRem(90px);
             }
 
-            /*商品左边的列表切换的样式类*/
-            .shopListActive {
-                background-color: white;
-                border-left: 3px #3e90e8 solid;
+
+    /* 动画 小球 */
+            .ball-container {
+
+            /* 小球 */
+                .ball {
+                    /* 固定定位 */
+                    position: fixed;
+
+                    left: 60px;
+                    bottom: 85px;
+                    z-index: 1300;
+
+                    &.drop-enter-active {
+
+                        transition: all .5s cubic-bezier(.62, -0.5, .89, .76);
+
+                        .inner {
+                            width: 40px;
+                            height: 40px;
+                            border-radius: 50%;
+                            background-color: red;
+                            transition: all .5s linear;
+                         }
+
+                    }
+
+                }
             }
+            .car-icon-animation {
+                animation: drop-car 0.5s;
+            }
+
+            @keyframes drop-car {
+                0%   { transform: scale(1) }
+                25%  { transform: scale(.8) }
+                50%  { transform: scale(1.1) }
+                75%  { transform: scale(.9) }
+                100% { transform: scale(1) }
+            }
+        }
 
     }
-
-
 
 </style>

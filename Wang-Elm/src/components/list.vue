@@ -27,21 +27,21 @@
                         </p>
                     </div>
                     <div class="list-right-bottom">
-                        <p v-for="(ativity, index) in a.activities" :key='index' v-if="index < 2">
-                             <span>
-                                   <span :style="{color:'#'+ativity.icon_color}">{{ativity.icon_name}}</span>{{ativity.description}}
-                             </span>
-                            <span v-if="index == 0">
-                                <span v-if="a.activities.length > 2"
-                                      @click="activityCount">{{a.activities.length}}个活动</span>
+                            <p v-for="(ativity, index) in a.activities" :key='index' v-if="index < 2">
+                                 <span>
+                                       <span :style="{color:'#'+ativity.icon_color}">{{ativity.icon_name}}</span>{{ativity.description}}
+                                 </span>
+                                <span v-if="index == 0">
+                                    <span v-if="a.activities.length > 2"
+                                          @click="activityCount">{{a.activities.length}}个活动</span>
+                                </span>
+                            </p>
+                            <p class="active" v-for="(ativity, index) in a.activities" :key='index' v-if="index >= 2">
+                              <span>
+                                <span :style="{color:'#'+ativity.icon_color}">{{ativity.icon_name}}</span>{{ativity.description}}
                             </span>
-                        </p>
-                        <p class="active" v-for="(ativity, index) in a.activities" :key='index' v-if="index >= 2">
-                          <span>
-                            <span :style="{color:'#'+ativity.icon_color}">{{ativity.icon_name}}</span>{{ativity.description}}
-                        </span>
-                        </p>
-                    </div>
+                            </p>
+                        </div>
                     <div>
 
                     </div>
@@ -58,6 +58,7 @@
 <script type="text/ecmascript-6">
 
     import {getShopList} from "@/data/getData";
+
     import {
             getImgPath
     } from '@/config/until';
@@ -71,10 +72,12 @@
                 isButton: true
             }
         },
+
         mounted() {
             console.log('list initdata');
             this.loadShopList(this.latitude, this.longitude);
         },
+
         methods: {
             getPath: getImgPath,
             //米和千米的转换
