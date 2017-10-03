@@ -5,11 +5,13 @@
         <div class="header" :style="{backgroundImage:bi,backgroundSize:'100% 200%'}">
             <!--返回的按钮-->
             <div class="return-button">
+                <!--TODO 1.2 返回上一页 $router-->
                 <i class="fa fa-angle-left" @click="$router.go(-1)"></i>
             </div>
 
             <!--中间部分-->
-            <div class="content">
+            <div class="content" v-if="shopHeader">
+                <!--TODO 写v-if是判断在模板加载的时候,是否编译这个元素,如果在编译模板的时候,数据没有回来,而直接调用这个变量的化,会报编译错误undefined,这样,下面的模板都不会编译了,这是个很大的问题,所以,写v-if是为了,有数据的时候就编译模板,没有的时候就不去编译模板,不加载数据 -->
                 <img :src="getPath(shopHeader.image_path,'130x130')" alt="">
                 <div>
                     <p>{{shopHeader.name}}</p>
@@ -20,19 +22,27 @@
             </div>
 
             <!--活动-->
-            <div class="activities">
+            <div class="activities" v-if="shopHeader">
                 <span>
+                    <!--TODO ########:style查看教程 计算属性和方法的区别 #####-->
+                    <!--TODO 在这里使用计算属性的原因,是因为计算属性基于值(shopHeader)的依赖进行缓存,当shopHeader没有改变的时候,一直会返回以前的值,不会重新执行方法,相比之下方法属性没有缓存,每次调用他都会重新执行方法,效率就会低得多-->
                     <span :style="{backgroundColor:'#'+shopHeader.activities[0].icon_color}">{{shopHeader.activities[0].icon_name}}</span>
                     <span>{{shopHeader.activities[0].description}}</span>
                 </span>
                 <span @click="showActivity">{{shopHeader.activities.length}}个活动</span>
             </div>
+
         </div>
         <!--TODO 1.头部结束-->
 
 
         <!--TODO 点击头部活动跳出来的整个屏幕的弹框-->
+
+        <!--TODO 优化  这个结构原本在应该在头部里面的,结果我写在头部的外边,所以,把这个功能块粘贴到头部的div里面-->
+
         <!--点击活动,出现的整个屏幕的div-->
+
+
         <div class="showActive" v-if="changeState">
             <!--名称,招牌-->
             <h1>{{shopHeader.name}}</h1>
@@ -80,6 +90,7 @@
             </div>
 
         </div>
+
         <!--TODO 点击头部活动跳出来的整个屏幕的弹框结束-->
 
 
@@ -96,6 +107,7 @@
 
 
         <!--TODO 3.商品详情界面-->
+
         <!--商品界面-->
         <div class="good" v-if="goodState">
 
@@ -260,16 +272,15 @@
         //TODO VUE DATA
         data(){
             return {
-                shopHeader: null,
+                shopHeader: null,  //TODO 保存获取回来的商家的信息头部
+
                 backgroudImage: null,
 
                 changeState: false,//改变商品活动的开关
                 goodState: true,//改变商品界面的开关
                 evaluationState: false,//改变评价的开关
                 shopState: false,//改变店铺页面的开关
-
                 goodList: null,//商家里面的商品列表信息
-
                 isShopListActive: 0,
 
                 specification : -1, //判断规格的开关
@@ -337,6 +348,7 @@
             showActivity(){
                 this.changeState = this.changeState ? false : true;
             },
+            //
             level: function (level) {
                 return level * 20 + '%';
             },
@@ -370,7 +382,6 @@
 
                 document.documentElement.scrollTop = ul.scrollTop;
 
-                console.log("body ScrollTop" + document.body.scrollTop);
 
                 var rightIndex = ul.childNodes;
 
@@ -380,8 +391,6 @@
                 for (var i = 0; i < rightIndex.length; i++) {
 
                     if (ul.scrollTop >= height) {
-
-                        console.log(height);
 
                         this.isShopListActive = i;
                     }
@@ -477,7 +486,6 @@
 
             initArr(response){
 
-                console.log( "aaaaaa" +response);
 
                 var leftArr = new Array();
 
@@ -557,6 +565,7 @@
                         // 里层元素控制x轴方向的过渡
                         inner.style.webkitTransform = 'translate3d('+x+'px, 0, 0)';
                         inner.style.transform = 'translate3d('+x+'px, 0, 0)';
+
                     }
                 }
 
@@ -582,14 +591,11 @@
             },
             afterEnter(){
 
-                console.log('afterEnter');
-
                 let ball = this.dropBalls.shift();
 
                 if (ball) {
                     ball.show = false;
                 }
-
                 this.isAnimation = true;
             }
 
@@ -598,7 +604,10 @@
         //TODO VUE MOUNTED
         mounted(){
             //获取商品头部的信息
+
+            //TODO 1.1 获取商家数据
             getShopHeader(this.$route.query.latitude, this.$route.query.longitude, this.$route.query.id).then(response=> {
+                //TODO this.shopHeader = response 会调用beforeCreate Created 生命周期钩子函数,重新编译模板,加载数据
                 this.shopHeader = response;
                 this.backgroudImage = this.getShopImg(this.shopHeader.image_path, "40", "50x40");
             }).catch(error=> {
@@ -621,10 +630,23 @@
 <!--TODO CSS     -->
 <style lang="scss" type="text/scss">
 
+    /** TODO scss是css的预处理器.使用scss就可以在css代码中使用变量 **/
+
+    /** TODO lang="scss"作用:使用scss语法,项目编译时,可以使用scss处理器将scss处理成浏览器可以识别的css代码.(实际上是解释变量,方法,以及嵌套函数) **/
+
+    /* TODO 不写lang="scss" 会报没有找到相关的依赖包 */
+
+    /* TODO 在vue中使用scss,需要下载相关的依赖包,在package.json里面的devDependencies里面写引用的代码,添相关的依赖包 */
+
+    /* TODO type="text/scss" 让编译器识别scss语法,而不会报语法错误,但是不影响实际项目的使用 */
+
+    /*TODO 导入scss的其他文件 @import是scss的语法,可以使用该文件里面的方法,混合器等等*/
     @import "../../scss/mixin.scss";
 
 
     #shop {
+
+        /*TODO 1头部*/
         .header {
 
             padding-left: pxToRem(20px);
@@ -690,6 +712,8 @@
 
         }
 
+    /*TODO 头部结束*/
+
         /*<!--点击活动,出现的整个屏幕的div的样式-->*/
 
         /*  vh 表示和手机屏幕一样的高 */
@@ -721,10 +745,13 @@
 
             /*优惠信息样式*/
             .rating-message {
+
                 font-size: pxToRem(24px);
-                /*border-radius: ;*/
+
                 border: 1px solid white;
+
                 border-radius: 30px;
+
                 padding: 15px;
 
                 margin-top: pxToRem(20px);
@@ -779,6 +806,9 @@
 
             padding: 10px 0 10px 0;
         }
+
+
+        /*TODO 2商品详情*/
 
         /*商品列表的样式*/
         .good {
@@ -944,6 +974,9 @@
                 }
             }
         }
+    /*TODO 商品详情结束*/
+
+
         /*给商品 评价 店铺 绑定的样式类*/
         .goodShopActice {
             color: #3e90e8;
@@ -957,6 +990,8 @@
             border-left: 3px #3e90e8 solid;
         }
 
+
+        /*TODO 3底部购物车*/
 
         /*底部购物车的样式*/
 
@@ -1003,14 +1038,17 @@
             }
             .cart-right{
                 color: #fff;
+
                 font-size: pxToRem(29px);
+
                 background-color: #4cd964;
+
                 width: pxToRem(210px);
                 height: pxToRem(90px);
             }
 
 
-    /* 动画 小球 */
+            /* 动画 小球 */
             .ball-container {
 
             /* 小球 */
@@ -1032,8 +1070,8 @@
                             border-radius: 50%;
                             background-color: red;
                             transition: all .5s linear;
-                         }
 
+                         }
                     }
 
                 }
@@ -1050,6 +1088,9 @@
                 100% { transform: scale(1) }
             }
         }
+
+    /*TODO 底部购物车*/
+
 
     }
 

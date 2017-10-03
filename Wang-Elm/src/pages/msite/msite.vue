@@ -163,7 +163,6 @@
         },
         async mounted (){
 
-            console.log("msite mounted");
 
             try {
                 let position = await getPosition();

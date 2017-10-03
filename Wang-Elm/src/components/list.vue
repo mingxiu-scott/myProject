@@ -98,7 +98,6 @@
 
             //判断是有加载下一页的商家列表
             loadShopList(latitude, longitude, number = 0){
-                console.log('loadShopList');
 
                 console.log(number);
 
@@ -116,12 +115,6 @@
                 //箭头函数是定义在哪里,this就是定义时的上下文
                 //通过判断body的滚动值,和offset/height的值,然后加载下面的数据
                 window.onscroll = () => {
-                    console.log("scrollTop  " + body.scrollTop);
-                    console.log("clientHeight  " + body.clientHeight);
-                    console.log("offsetHeight  " + body.offsetHeight);
-                    console.log("scrollHeight  " + body.scrollHeight);
-
-                    console.log( "bodyScrollTol" +body.scrollTop);
 
                     if (body.scrollTop + body.offsetHeight == body.scrollHeight) {
                         number += 20;
@@ -188,57 +181,57 @@
 
     span {
 
-    @include flex-content(flex-start, flex-start);
+        @include flex-content(flex-start, flex-start);
 
-    .list-left {
-        /*height: 100%;*/
-        width: pxToRem(130px);
+        .list-left {
+            /*height: 100%;*/
+            width: pxToRem(130px);
 
-    /*padding-top : pxToRem(10px);*/
-    img {
-        width: pxToRem(130px);
-        height: pxToRem(130px);
-    }
+            /*padding-top : pxToRem(10px);*/
+            img {
+                width: pxToRem(130px);
+                height: pxToRem(130px);
+            }
 
-    }
-    .list-right {
-        width: pxToRem(590px);
-        padding-left: pxToRem(15px);
+        }
+        .list-right {
+                width: pxToRem(590px);
+                padding-left: pxToRem(15px);
 
-    .list-right-top {
-        flex-grow: 1;
+                .list-right-top {
+                    flex-grow: 1;
 
-        border-bottom: 1px solid silver;
+                    border-bottom: 1px solid silver;
 
-    p {
-    @include flex-content(center, space-between);
-        color: #666;
-    }
+                p {
+                @include flex-content(center, space-between);
+                    color: #666;
+                }
 
-    p:first-child {
-        font-size: pxToRem(30px);
-        color: #000;
-    }
+                p:first-child {
+                    font-size: pxToRem(30px);
+                    color: #000;
+                }
 
-    p:nth-child(2) {
-        margin-top: pxToRem(10px);
-        margin-bottom: pxToRem(10px);
-    }
+                p:nth-child(2) {
+                    margin-top: pxToRem(10px);
+                    margin-bottom: pxToRem(10px);
+                }
 
-    }
-    .list-right-bottom {
+                }
+                .list-right-bottom {
 
-    .active {
-        display: none;
-    }
+                .active {
+                    display: none;
+                }
 
-    p:first-child {
-    @include flex-content(center, space-between);
-    }
+                p:first-child {
+                @include flex-content(center, space-between);
+                }
 
-    }
-    }
-    }
+                }
+            }
+        }
 
     }
 </style>

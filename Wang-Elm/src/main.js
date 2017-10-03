@@ -11,6 +11,8 @@ Vue.config.productionTip = false;
 /* eslint-disable no-new */
 new Vue({
   el: '#wang-elm',
+  //注入路由
   router,
   store
 });
+
