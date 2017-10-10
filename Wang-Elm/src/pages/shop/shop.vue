@@ -9,6 +9,7 @@
                 <i class="fa fa-angle-left" @click="$router.go(-1)"></i>
             </div>
 
+
             <!--中间部分-->
             <div class="content" v-if="shopHeader">
                 <!--TODO 写v-if是判断在模板加载的时候,是否编译这个元素,如果在编译模板的时候,数据没有回来,而直接调用这个变量的化,会报编译错误undefined,这样,下面的模板都不会编译了,这是个很大的问题,所以,写v-if是为了,有数据的时候就编译模板,没有的时候就不去编译模板,不加载数据 -->
@@ -20,6 +21,7 @@
                     <p>公告:&nbsp; &nbsp;{{shopHeader.promotion_info}}</p>
                 </div>
             </div>
+
 
             <!--活动-->
             <div class="activities" v-if="shopHeader">
@@ -154,10 +156,10 @@
                                         <div @click="chooseSpecifications(index,index2)" v-if="list_item.specifications.length" class="specifications">选规格</div>
 
                                         <div v-else>
-                                            <div class="minus" v-if="rightArr[index][index2] > 0" @click="minus(index, index2)">-</div>
+                                            <div class="minus" v-if="rightArr[index][index2] > 0" @click="minus(index, index2,list_item.specfoods[0].food_id,$event)">-</div>
                                             <div v-if="rightArr[index][index2] > 0" class="number">{{rightArr[index][index2]}}</div>
 
-                                            <div @click="plus(index,index2, $event)" class="plus">+</div>
+                                            <div @click="plus(index,index2,list_item.specfoods[0].food_id, list_item.specfoods[0].name,list_item.specfoods[0].original_price,list_item.specfoods[0].price,list_item.specfoods[0].spec,$event)" class="plus">+</div>
 
                                         </div>
                                     </div>
@@ -192,11 +194,7 @@
 
             <div class="good-content">
 
-
             </div>
-
-
-
         </div>
 
         <!--TODO 3.商品详情界面结束-->
@@ -215,18 +213,19 @@
 
         <!--TODO 4.底部购物车-->
         <!--底部购物车的-->
-        <div class="shopCart" v-if="goodState">
+        <div class="shopCart" v-if="goodState" @click="isCarList=!isCarList && shopMount > 0">
 
             <div class="cart-left">
                 <div class="shopCart-icon" :class="{'car-icon-animation':isAnimation}" @animationend="removeAnimation">
                     <i class="fa fa-shopping-cart"></i>
+                    <div class="car-mount-count" v-if="shopMount > 0">{{shopMount}}</div>
                 </div>
                 <div class="shopCart-count">
-                    <p>￥0</p>
+                    <p>￥{{shopCarCount}}</p>
                     <p>配送费￥5</p>
                 </div>
             </div>
-            <button class="cart-right">去结算</button>
+            <button class="cart-right" @click="jumpToOrder">去结算</button>
 
             <!-- 动画 小球 -->
             <div class="ball-container">
@@ -243,14 +242,57 @@
 
             </div>
 
+            <!-- 购物车列表 -->
+            <transition name="push">
+                <div class="car" v-show="isCarList">
+                    <!-- 购物车标题 -->
+                    <div class="car-header">
+                        <span class="car-title">购物车</span>
+                        <span class="clear-car">
+              <i class="fa fa-trash-o"></i>
+              <span @click="clearCart">清空</span>
+          </span>
+                    </div>
+                    <!-- 购物车标题 结束-->
+
+                    <!-- 购物车商品列表 -->
+                    <ul class="car-list">
+
+                        <li v-for="(food, foodId) in shopCarList" :key="foodId" class="car-list-item">
+
+                            <!-- 商品名称 规格 -->
+                            <div class="food-message">
+                                <p class="food-name">{{food.name}}</p>
+                                <p class="food-spec" v-if="food.spec">{{food.spec[0].name}}</p>
+                            </div>
+
+                            <!-- 商品价格 -->
+                            <div class="food-price">
+                                <span class="original-price">{{food.original_price}}</span>
+                                <span class="price">{{food.price}}</span>
+                            </div>
+                            <div @click="minus(food.index, food.index2,foodId,$event)">-</div>
+                            <!-- 商品购买数量 -->
+                            <div >{{food.count}}</div>
+
+                            <div @click="plus(food.index,food.index2,foodId,food.name,food.original_price,food.price,food.spec,$event)">+</div>
+                        </li>
+
+                    </ul>
+                    <!-- 购物车商品列表 结束 -->
+                </div>
+            </transition>
+
+            <!-- 购物车列表 -->
+
         </div>
         <!--TODO 4.底部购物车结束-->
+
 
 
     </div>
 
 </template>
-
 
 <!--TODO JS  *******************************************-->
 
@@ -266,6 +308,8 @@
             getImgPath,
             getShopViewImg
     } from '@/config/until';
+
+    import {mapState, mapMutations} from 'vuex';
 
     export default{
         name: 'shop',
@@ -294,6 +338,7 @@
                 rightArr: [],//存储右边的数组的数字
 
                 leftArr: [],//存储左边的数字
+
                 ballPlus: null,
                 isAnimation: false,
 
@@ -319,8 +364,13 @@
                 ],
                 dropBalls: [],
 
+                isCarList: false,
+
+                shopId : this.$route.query.id,
+
             }
         },
+
 
         //TODO VUE COMPUTED
         //拼接的backgroundImage的字符串
@@ -329,8 +379,44 @@
             bi(){   //TODO 拼接background-Image 后面的url
                 return 'url(' + this.backgroudImage + ')';
             },
+
             location(){   //TODO 获得路由过来的定位的值
                 return this.$store.state.location;
+            },
+
+            ...mapState(['location','carList']),
+
+            shopCarList(){
+                console.log('carList');
+                console.log(this.carList[this.shopId]);
+
+
+                console.log(this.carList);
+                return this.carList[this.shopId];
+            },
+
+            shopCarCount(){
+
+                var price = 0;
+
+                if(this.shopCarList){
+                    Object.values(this.shopCarList).forEach(function (food) {
+                      price += food.count * Math.round(food.price * 100);
+                    })
+                }
+                price = price / 100;
+                return price;
+            },
+            shopMount(){
+
+                var count = 0;
+
+                if(this.shopCarList){
+                    Object.values(this.shopCarList).forEach(function (food) {
+                        count += food.count;
+                    });
+                }
+                return count;
             }
         },
 
@@ -432,8 +518,11 @@
 
             },
 
-            minus(index, index2){
-//                alert(index + index2);
+            minus(index, index2,foodId,event){
+
+
+
+                console.log("foodId in minux" + foodId);
 
                 let arr = this.rightArr[index];
 
@@ -448,19 +537,23 @@
                 //$set属性,是为了更新vue的属性的方法
 
                 this.$set(this.rightArr, index, arr);
+
+                console.log(foodId);
+
+
+                this.reduceFood(foodId);
+                event.stopPropagation();
             },
 
             removeAnimation () {
                 this.isAnimation = false;
             },
 
-            plus(index, index2, event){
+            plus(index, index2, foodId,name,original_price,price,spec,event){
 
                 this.ballPlus = event.currentTarget;
 
-
                 this.drop(event.currentTarget);
-
 
                 let arr = this.rightArr[index];
 
@@ -470,15 +563,17 @@
 
                 this.$set(this.leftArr, index, this.leftArr[index]);
 
-                console.log("ddddlist"+ this.leftArr[index]);
-
                 this.$set(this.rightArr, index, arr);
+
+                //添加购物车的对象的数据
+                this.addFood(foodId,name,original_price,price,spec,index,index2);
+
+                event.stopPropagation();
 
             },
 
             //选规格的切换函数
             chooseSpecifications(index1,index2){
-
                 this.specificationTwo = this.specificationTwo == -1 ? index1 : -1;
                 this.specification = this.specification == -1 ? index2 : -1;
 
@@ -496,7 +591,9 @@
                  }
 
                 for (var i = 0; i < response.length; i++){
+
                     rightArr[i] = new Array();
+
                     for (var j =0; j < response[i].foods.length; j++){
                         rightArr[i][j] = 0;
                     }
@@ -505,7 +602,6 @@
                 this.leftArr = leftArr;
 
                 this.rightArr = rightArr;
-                console.log( "bbbbbbbbbbb" +this.rightArr);
             },
 
             drop(el){
@@ -527,20 +623,6 @@
 
                 console.log("beforeEnter");
 
-//                let rect = this.ballPlus.getBoundingClientRect();
-//
-//                let x = rect.left - 32;
-//                let y = -(window.innerHeight - rect.top - 22);
-//
-//                el.style.webkitTransform = "translate3d(0,)"+ y + 'px,0)';
-//
-//                el.style.transform = 'translate3d(0, ' +y+'px, 0)';
-//
-//                // 获取里层元素
-//                let inner = el.getElementsByClassName('inner-hook')[0];
-//                // 里层元素控制x轴方向的过渡
-//                inner.style.webkitTransform = 'translate3d('+x+'px, 0, 0)';
-//                inner.style.transform = 'translate3d('+x+'px, 0, 0)';
 
                 let count = this.balls.length;
 
@@ -597,6 +679,31 @@
                     ball.show = false;
                 }
                 this.isAnimation = true;
+            },
+
+            ...mapMutations(['ADD_CAR','REDUCE_CAR']),
+
+            addFood(foodId,name,original_price,price,spec,index,index2){
+                this.ADD_CAR({shopId:this.shopId,foodId,name,original_price,price,spec,index,index2});
+            },
+            reduceFood(foodId){
+                this.REDUCE_CAR({shopId: this.shopId,foodId});
+            },
+            clearCart(){
+
+                this.carList[this.shopId] = {};
+
+                console.log(this.leftArr.length);
+
+                this.initArr(this.goodList)
+
+
+            },
+            jumpToOrder(){
+                this.$router.push({
+                    path: '/order'
+                });
+
             }
 
         },
@@ -616,12 +723,13 @@
 
             //获取商品列表的信息
             getShopGoodList(this.$route.query.id).then(response=> {
+
                 this.goodList = response;
                 this.initArr(response);
+
             }).catch(error=> {
                 console.log(error);
             });
-
         }
     }
 </script>
@@ -1003,6 +1111,8 @@
             bottom: 0;
             left: 0;
 
+            z-index: 110;
+
 
             height: pxToRem(90px);
             width: 100%;
@@ -1031,6 +1141,26 @@
 
                     left: 50px;
                     bottom: 20px;
+
+
+                    .car-mount-count{
+                        text-align: center;
+                        position: absolute;
+
+                        line-height: pxToRem(30px);
+
+                        top: 0;
+                        right: 0;
+                        width: pxToRem(30px);
+                        height: pxToRem(30px);
+                        font-size: pxToRem(20px);
+                        color: white;
+
+                        border-radius: 30px;
+
+                        background-color: red;
+
+                    }
                 }
                 .shopCart-count{
                     width: pxToRem(382px);
@@ -1087,10 +1217,85 @@
                 75%  { transform: scale(.9) }
                 100% { transform: scale(1) }
             }
+
+
+
+
+
+    /* 购物车列表 */
+    .car {
+        position: absolute;
+        width: 100%;
+        bottom: 90px;
+        left: 0;
+        z-index: 10;
+
+        background-color: #fff;
+        width: 100%;
+    .car-header {
+        padding: pxToRem(0px, 25px);
+        line-height: pxToRem(80px);
+        background-color: #eceff1;
+        border-bottom: 1px solid #ddd;
+        color: #666;
+    .car-title {
+        padding-left: pxToRem(10px);
+        border-left: pxToRem(7px) solid #3190e8;
+        font-size: pxToRem(32px);
+    }
+
+    .clear-car {
+        float: right;
+        font-size: pxToRem(26px);
+    }
+
+
+    }
+
+    .car-list {
+        max-height: pxToRem(600px);
+        overflow-y: scroll;
+
+        .car-list-item {
+            padding: pxToRem(15px, 25px, 15px, 0px);
+            margin-left: pxToRem(25px);
+            border-bottom: 1px solid #eee;
+            @include flex-content(flex-start,space-around);
+
+            .food-message {
+                .food-name {
+                    max-width: pxToRem(350px);
+                    font-size: pxToRem(32px);
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+
+
         }
+    }
+
+    }
+
+
+
+
+    /* 购物车列表 过渡 */
+    .push-enter-active, .push-leave-active {
+        transition: all .3s ease;
+    }
+    .push-enter, .push-leave-to {
+        transform: translateY(100%);
+    }
+
+    .push-enter-to, .push-leave {
+        transform: translateY(0);
+    }
+
+    }
 
     /*TODO 底部购物车*/
-
 
     }
 

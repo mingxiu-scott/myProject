@@ -99,11 +99,8 @@
             //判断是有加载下一页的商家列表
             loadShopList(latitude, longitude, number = 0){
 
-                console.log(number);
-
                 getShopList(this.latitude, this.longitude, number).then(response=> {
                     this.shopList = response;
-                    console.log(response);
                 }).catch(error=> {
                     console.log(error);
                 });
@@ -118,7 +115,6 @@
 
                     if (body.scrollTop + body.offsetHeight == body.scrollHeight) {
                         number += 20;
-                        console.log(number);
 
                         getShopList(latitude, longitude, number).then(response=> {
 

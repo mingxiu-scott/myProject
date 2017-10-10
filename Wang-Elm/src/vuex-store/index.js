@@ -11,6 +11,7 @@ Vue.use(Vuex);
 
 const state = {
     location: null,
+    carList:{},//加入购物车商品列表
 };
 
 export default new Vuex.Store({

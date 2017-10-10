@@ -3,3 +3,7 @@
  */
 
 export const SAVE_LOCATION = 'SAVE_LOCATION';
+
+export const ADD_CAR = 'ADD_CAR';
+
+export const REDUCE_CAR = 'REDUCE_CAR';

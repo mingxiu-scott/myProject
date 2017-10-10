@@ -65,6 +65,7 @@
 
 <script type="text/ecmascript-6">
     import wangFooter from '@/components/footer';
+
     import list from "@/components/list";
 
     import {
@@ -103,7 +104,8 @@
                 description: null,
                 hotSearchWords: [], // 热门搜索词汇
                 entries: [], //首页分类
-                addressName: '获取地址中...',// 地址名称
+                addressName: '获取地址中...',//
+                test: 'this is test data'
             }
         },
         //检测location这个属性
@@ -143,7 +145,6 @@
                 getEntries(this.location.latitude, this.location.longitude).then(response => {
                     this.entries = response;
                     this.entries = this.entries[0].entries;
-                    console.log(this.entries);
                 });
             },
             getPath: getImgPath,
@@ -162,8 +163,6 @@
 
         },
         async mounted (){
-
-
             try {
                 let position = await getPosition();
 
@@ -191,12 +190,26 @@
         },
 //        beforeCreate(){
 //            console.log('msite before create');
+//            console.log( "el in msite    " +this.$el);
+//            console.log(this.test);
+//
+//            console.log("-------------------");
 //        },
 //        created(){
 //            console.log('msite created');
+//            console.log( "el in msite   " +this.$el);
+//            console.log(this.test);
+//            console.log("-------------------");
+//
+//
 //        },
 //        beforeMount(){
 //            console.log('msite beforeMount');
+//            console.log( "el in msite    " +this.$el);
+//            console.log(this.test);
+//
+//            console.log("-------------------");
+//
 //        },
 //        beforeUpdate(){
 //            console.log('msite beforeUpdate');
@@ -299,12 +312,7 @@
 
 
     .entris-first{
-
         /*position: absolute;*/
-
-
-
-
         background-color: white;
         height: pxToRem(330px);
         width: 100%;
@@ -371,7 +379,6 @@
 
 
     div{
-
             width: pxToRem(8px);
             height: pxToRem(8px);
             border: pxToRem(2px) solid olivedrab;

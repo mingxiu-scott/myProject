@@ -11,5 +11,6 @@ export const setStorage = (key, value)=> {
 
 export const getStorage = (key)=> {
     var res = window.localStorage.getItem(key);
+
     return JSON.parse(res);
 };
